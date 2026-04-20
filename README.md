@@ -8,19 +8,21 @@
 ---
 
 ## 📖 Présentation du projet
-Cet atelier met en œuvre un **mini-PRA** sur **Kubernetes**. Il simule la perte d'un volume de données et sa restauration via un système de sauvegarde automatisé.
+Atelier PRA/PCA sur Kubernetes : Mise en place d'une application Flask résiliente avec sauvegardes automatisées par CronJob.
+
+> **💡 Conseil de navigation :** Pour ne pas quitter cette page, maintenez la touche **Ctrl** (ou Cmd) enfoncée en cliquant sur les liens ci-dessous pour les ouvrir dans un **nouvel onglet**.
 
 ---
 
-## 🌐 Accès à l'Application (Ouverture nouvel onglet)
+## 🌐 État des Routes et Accès Application
 
-| Action | Lien de Test | Statut |
+| Action | Lien de Test (Accès externe) | Statut |
 | :--- | :--- | :--- |
-| 🏠 **Accueil** | <a href="https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/" target="_blank">Ouvrir l'Accueil</a> | OK ✅ |
-| 🏥 **Santé** | <a href="https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/health" target="_blank">Vérifier Health</a> | OK ✅ |
-| ➕ **Ajouter** | <a href="https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/add?message=Test_EPSI" target="_blank">Ajouter un message</a> | OK ✅ |
-| 🔢 **Compteur** | <a href="https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/count" target="_blank">Voir le Compteur</a> | OK ✅ |
-| 📋 **Consultation** | <a href="https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/consultation" target="_blank">Consulter la base</a> | OK ✅ |
+| 🏠 **Accueil** | [Ouvrir l'Accueil](https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/) | OK ✅ |
+| 🏥 **Santé** | [Vérifier Health](https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/health) | OK ✅ |
+| ➕ **Ajouter** | [Ajouter un message](https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/add?message=Test_EPSI) | OK ✅ |
+| 🔢 **Compteur** | [Voir le Compteur](https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/count) | OK ✅ |
+| 📋 **Consultation** | [Consulter la base](https://psychic-funicular-4j9jqrxw547jc799v-8080.app.github.dev/consultation) | OK ✅ |
 
 ---
 
