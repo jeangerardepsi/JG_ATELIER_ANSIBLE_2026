@@ -1,82 +1,69 @@
 ---
-- name: Atelier Ansible - Séquence 3 - Page Dynamique Améliorée
-  hosts: local
+- name: Atelier Ansible - Séquence 5 (Multi-Environnement)
+  hosts: all
   become: true
   gather_facts: true
 
   vars:
-    # --- Nouvelles Variables ---
-    page_title: "ATELIER ANSIBLE 2026"
-    author: "Jean-Gérard HOUNKANRIN"
+    # Variables communes
     prof_name: "Boris STOCKER"
+    etudiant_name: "Jean-Gérard HOUNKANRIN"
     school_url: "https://www.epsi.fr/campus/paris"
-    
-    # Récupère l'utilisateur qui a lancé le terminal (ex: codespace)
     app_user: "{{ ansible_env.USER | default('Jean-Gérard') }}"
-    
-    # Configuration Système
     page_dest: /var/www/html/index.html
     yarn_repo_file: /etc/apt/sources.list.d/yarn.list
     yarn_repo_disabled_file: /etc/apt/sources.list.d/yarn.list.disabled
 
+  # Logique de bascule entre DEV et PROD
+  pre_tasks:
+    - name: "Configuration : Mode DEV"
+      set_fact:
+        page_title: "Application DEV"
+        env_type: "dev"
+        author: "Etudiant DEV"
+        app_name: "Application DEV"
+      # On vérifie que 'dev' est dans les groupes ET que l'on a limité à dev
+      when: "'dev' in group_names"
+
+    - name: "Configuration : Mode PROD"
+      set_fact:
+        page_title: "Application PROD"
+        env_type: "prod"
+        author: "Equipe Ops"
+        app_name: "Application PROD"
+      # On vérifie que 'prod' est dans les groupes ET que l'on a limité à prod
+      when: "'prod' in group_names"
+
   tasks:
-    - name: Afficher les informations de déploiement
-      debug:
-        msg:
-          - "Déploiement pour : {{ author }}"
-          - "Sous la direction de : {{ prof_name }}"
+    - name: Remédiation dépôt Yarn
+      block:
+        - name: Vérifier si le dépôt Yarn existe
+          stat:
+            path: "{{ yarn_repo_file }}"
+          register: yarn_repo_stat
+        - name: Désactiver Yarn
+          command: mv "{{ yarn_repo_file }}" "{{ yarn_repo_disabled_file }}"
+          when: yarn_repo_stat.stat.exists
+          changed_when: true
 
-    - name: Vérifier si le dépôt Yarn existe
-      stat:
-        path: "{{ yarn_repo_file }}"
-      register: yarn_repo_stat
-
-    - name: Désactiver temporairement le dépôt Yarn si nécessaire
-      command: mv "{{ yarn_repo_file }}" "{{ yarn_repo_disabled_file }}"
-      when: yarn_repo_stat.stat.exists
-      changed_when: true
-
-    - name: Mettre à jour le cache APT
-      apt:
-        update_cache: true
-
-    - name: Installer nginx
+    - name: Installation de Nginx
       apt:
         name: nginx
         state: present
+        update_cache: true
 
-    - name: Vérifier que le répertoire web existe
-      file:
-        path: /var/www/html
-        state: directory
-        owner: root
-        group: root
-        mode: "0755"
-
-    - name: Déployer la page dynamique avec Template
+    - name: Déployer la page dynamique
       template:
         src: files/index.html
         dest: "{{ page_dest }}"
-        owner: root
-        group: root
         mode: "0644"
       notify: Redémarrer nginx
 
-    - name: Activer et démarrer nginx
+    - name: Assurer que Nginx est démarré
       service:
         name: nginx
-        enabled: true
         state: started
-
-    - name: Vérifier que le site répond en HTTP
-      uri:
-        url: http://localhost
-        method: GET
-        status_code: 200
-      register: test_http
-      retries: 5
-      delay: 2
-      until: test_http.status == 200
+        enabled: true
 
   handlers:
     - name: Redémarrer nginx

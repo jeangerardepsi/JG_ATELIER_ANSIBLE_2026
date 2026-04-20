@@ -4,31 +4,45 @@
   <meta charset="UTF-8" />
   <title>{{ page_title }}</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; text-align: center; background-color: #2c3e50; color: white; padding-top: 50px; }
-    .container { background-color: #34495e; display: inline-block; padding: 40px; border-radius: 15px; border: 2px solid #3498db; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    h1 { color: #3498db; text-transform: uppercase; }
+    /* Style dynamique selon l'environnement */
+    body { 
+      font-family: 'Segoe UI', sans-serif; 
+      text-align: center; 
+      background-color: {{ '#2c3e50' if env_type == 'prod' else '#2e4053' }}; 
+      color: white; 
+      padding-top: 50px; 
+    }
+    .container { 
+      background-color: #34495e; 
+      display: inline-block; 
+      padding: 40px; 
+      border-radius: 15px; 
+      border: 5px solid {{ '#c0392b' if env_type == 'prod' else '#2980b9' }}; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    }
+    h1 { color: {{ '#e74c3c' if env_type == 'prod' else '#3498db' }}; text-transform: uppercase; }
+    .badge { background: {{ '#c0392b' if env_type == 'prod' else '#2980b9' }}; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
     .highlight { font-weight: bold; color: #f1c40f; }
     .footer { margin-top: 20px; font-size: 0.9em; color: #bdc3c7; }
-    a { color: #3498db; text-decoration: none; font-weight: bold; }
-    a:hover { text-decoration: underline; }
-    .prof-box { margin-top: 15px; border-top: 1px solid #5d6d7e; padding-top: 10px; font-style: italic; }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="badge">ENVIRONNEMENT : {{ env_type | upper }}</div>
     <h1>{{ page_title }}</h1>
-    <p>Étudiant : <span class="highlight">{{ author }}</span></p>
+    <p>Responsable : <span class="highlight">{{ author }}</span></p>
     <p>Utilisateur système : <span class="highlight">{{ app_user }}</span></p>
     
-    <div class="prof-box">
+    <div style="margin-top: 15px; font-style: italic;">
+      <p>Etudiant : <strong>{{ etudiant_name }}</strong></p>
       <p>Sous la direction de : <strong>{{ prof_name }}</strong></p>
     </div>
 
     <hr>
-    <p>Campus : <a href="{{ school_url }}" target="_blank">EPSI Paris</a></p>
+    <p>Campus : <a href="{{ school_url }}" target="_blank" style="color: #3498db;">EPSI Paris</a></p>
     
     <div class="footer">
-      <p>Généré dynamiquement par Ansible</p>
+      <p>Déploiement avec --limit {{ env_type }}</p>
       <p>© EPSI 2026</p>
     </div>
   </div>

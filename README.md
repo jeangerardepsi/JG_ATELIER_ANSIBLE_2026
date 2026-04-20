@@ -1,156 +1,72 @@
-------------------------------------------------------------------------------------------------------
-ATELIER ANSIBLE
-------------------------------------------------------------------------------------------------------
-L’idée en 30 secondes : Dans cet atelier, vous allez apprendre à **automatiser le déploiement d’un serveur web avec Ansible**, directement depuis GitHub **Codespaces**, sans infrastructure complexe. L’objectif est de comprendre comment **décrire un état cible** (installer, configurer, déployer) et laisser l’outil l’appliquer automatiquement, de manière reproductible et idempotente. On passe ainsi d’une logique manuelle à une logique DevOps industrialisée.
-  
-**Architecture cible :** Ci-dessous, voici l'architecture cible souhaitée.   
-  
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8064eb95-da73-4bdd-9ef2-a7cebbbd71c8" />
-  
--------------------------------------------------------------------------------------------------------
-Séquence 1 : Codespace de Github
--------------------------------------------------------------------------------------------------------
-Objectif : Création d'un Codespace Github  
-Difficulté : Très facile (~5 minutes)
--------------------------------------------------------------------------------------------------------
-**Faites un Fork de ce projet**. Si besoin, voici une vidéo d'accompagnement pour vous aider à "Forker" un Repository Github : [Forker ce projet](https://youtu.be/p33-7XQ29zQ) 
-  
-Ensuite depuis l'onglet **[CODE]** de votre nouveau Repository, **ouvrez un Codespace Github**.
-  
----------------------------------------------------
-Séquence 2 : Création du votre environnement de travail
----------------------------------------------------
-Objectif : Créer votre environnement de travail  
-Difficulté : Simple (~10 minutes)
----------------------------------------------------
-Vous allez dans cette séquence mettre en place votre environnement et les logiciels Ansible. Depuis le terminal de votre Codespace copier/coller les codes ci-dessous étape par étape :  
+# 🚀 Rapport d'Atelier : Automatisation et Gestion de Configuration avec Ansible
 
-**Installation de Ansible et Nginx**  
-```
-sudo apt update
-sudo apt install -y ansible curl
-```
-**Vérifier l’environnement**  
-```
-ansible --version
-curl --version
-```
-**Tester la cible locale**  
-```
-ansible -i inventory.ini local -m ping
-```
-**Exécuter le playbook**  
-```
+**Auteur :** Jean-Gérard HOUNKANRIN  
+**Promotion :** EPSI 2026  
+**Encadrant :** Boris STOCKER  
+**Environnement :** GitHub Codespaces (Ubuntu)
+
+---
+
+## 📖 Présentation du projet
+Ce projet illustre les principes de l'**Infrastructure as Code (IaC)**. À travers cet atelier, j'ai mis en place une chaîne d'automatisation permettant de provisionner, configurer et personnaliser un serveur web **Nginx**. L'objectif est de s'affranchir des configurations manuelles pour garantir un déploiement fiable, rapide et reproductible.
+
+---
+
+## ⚙️ Guide de déploiement
+
+### 1. Pré-requis
+* Système Linux (Debian/Ubuntu préféré)
+* Ansible installé
+* Connexion SSH ou locale configurée
+
+### 2. Procédure technique
+Pour déployer l'intégralité du service, exécutez les commandes suivantes dans l'ordre :
+
+```bash
+# Génération de l'inventaire local
+echo "localhost ansible_connection=local" > inventory.ini
+
+# Exécution du Playbook principal
 ansible-playbook -i inventory.ini playbook.yml
 ```
-**Vérifier le résultat**  
-```
-curl http://localhost
-```  
----------------------------------------------------  
-**Réccupération de l'URL de votre serveur Nginx**. Votre serveur Nginx (et sa page Web) est déployé dans Codespace. Pour obtenir votre URL cliquez sur l'onglet **[PORTS]** dans votre Codespace (à coté de Terminal), ouvrez le port 80 et rendez public votre port (Visibilité du port). Ouvrez l'URL dans votre navigateur et c'est terminé.  
-  
----------------------------------------------------
-Séquence 3 : Exercices  
-Difficulté : Facile (~30 minutes)
----------------------------------------------------
-### Exercice 1 : Customisation de la page d'accueil 
-Customisez la page d'accueil de votre site Web en ajoutant la ligne suivante dans votre fichier index.html  
-```
-<h1>Déploiement réalisé par [Votre Nom]</h1>
-```
 
-### Exercice 2 : Paramétrer dynamiquement votre serveur avec Ansible 
-Voici le contenu (contenu imposé) de votre nouveau fichier index.html    
-```
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ page_title }}</title>
-</head>
-<body>
-  <h1>{{ page_title }}</h1>
-  <p>Déployé par : {{ author }}</p>
-  <p>Utilisateur système : {{ app_user }}</p>
-</body>
-</html>
-```
-Modifier votre playbook afin de :  
-* Créer un title contenant le texte suivant : "Serveur déployé avec Ansible"
-* L'auteur sera : "Votre nom"
-* L'utilisateur sera un **utilisateur Linux** : "Votre prénom"
-  
----------------------------------------------------
-Séquence 4 : Questions  
-Difficulté : Moyenne (~45 minutes)
----------------------------------------------------
-**Complétez et documentez ce fichier README.md** pour répondre aux questions des exercices.  
-Faites preuve de pédagogie et soyez clair dans vos explications et procedures de travail.  
+---
 
-**Question 1 :**  
-Pourquoi Ansible est-il qualifié d’outil "déclaratif" ?    
-  
-*..Répondez à cet exercice ici..*
+## 🧠 Expertise Théorique (Séquence 4)
 
-**Question 2 :**  
-Pourquoi l’utilisation de variables est-elle essentielle dans un playbook ?  
-  
-*..Répondez à cet exercice ici..*
+### Q1 : Pourquoi Ansible est-il qualifié d'outil "déclaratif" ?
+Contrairement aux scripts Bash classiques qui sont **impératifs** (on liste les ordres pas à pas), Ansible est **déclaratif**. On lui décrit l'**état final souhaité**. 
+* **Le principe :** On ne dit pas "Exécute apt-get install", on écrit `state: present`. 
+* **L'intérêt :** Cela permet l'**idempotence**. Ansible vérifie l'état actuel de la machine. Si le service est déjà configuré, il ne fait rien, évitant ainsi de corrompre un système déjà fonctionnel ou de dupliquer des lignes de configuration.
 
-**Question 3 :**  
-En quoi Ansible facilite-t-il la gestion de plusieurs serveurs ?  
-  
-*..Répondez à cet exercice ici..*
+### Q2 : Pourquoi l’utilisation de variables est-elle essentielle ?
+Les variables sont le socle de la **flexibilité** en automatisation. Elles permettent de :
+* **Séparer le code de la donnée :** On maintient un Playbook "propre" et générique.
+* **Mutualisation :** Un même Playbook peut déployer un serveur de Test ou de Production simplement en changeant un fichier de variables.
+* **Maintenance simplifiée :** Modifier une valeur à un seul endroit (le fichier `vars`) met à jour l'intégralité de l'infrastructure associée.
 
-**Question 4 :**  
-Quels sont les avantages et les limites d’Ansible dans un contexte DevOps ?   
-  
-*..Répondez à cet exercice ici..*
-  
-**Question 5 :**  
-Quelle est la différence entre les modules copy et template dans Ansible ?   
-  
-*..Répondez à cet exercice ici..*
+### Q3 : En quoi Ansible facilite-t-il la gestion de plusieurs serveurs ?
+Ansible brille par sa capacité de **passage à l'échelle (Scalability)** :
+* **Inventaire structuré :** On peut regrouper les machines par types (ex: `[web]`, `[db]`).
+* **Exécution parallèle :** Ansible peut configurer des centaines de serveurs simultanément via SSH.
+* **Consistance :** Il garantit que l'intégralité d'un parc informatique possède exactement les mêmes versions logicielles et correctifs de sécurité, éliminant le risque de "dérive de configuration".
 
----------------------------------------------------
-Séquence 5 : Atelier  
-Difficulté : Moyenne (~1 heure)
----------------------------------------------------
-### Structurer votre déploiement Ansible afin de pouvoir choisir entre un rôle DEV ou un rôle PROD  
-Modifier votre fichier playbook.yml afin de pouvoir choisir entre un rôle DEV ou un rôle PROD.  
+### Q4 : Quels sont les avantages et les limites d’Ansible en DevOps ?
+* **Avantages :** * **Agentless :** Aucun logiciel à installer sur les cibles, ce qui réduit la surface d'attaque et la consommation de ressources.
+    * **Lisibilité :** Le format YAML est compréhensible par les développeurs et les administrateurs, facilitant la collaboration DevOps.
+* **Limites :** * **Performances :** Pour des parcs de plus de 10 000 machines, les outils avec agents (comme Salt) sont parfois plus rapides.
+    * **Orchestration complexe :** Bien qu'excellent pour la configuration, Ansible est moins adapté que Terraform pour la gestion du cycle de vie pur des ressources Cloud (Provisioning).
 
-**Resultats attendus**  
-* Déploiement en DEV  
-```
-ansible-playbook -i inventory.ini playbook.yml --limit dev
-```
-```
-app_name: "Application DEV"
-env: "dev"
-author: "Etudiant DEV"
-```
-* Déploiement en PROD
-```
-ansible-playbook -i inventory.ini playbook.yml --limit prod
-```
-```
-app_name: "Application PROD"
-env: "prod"
-author: "Equipe Ops""
-```
----------------------------------------------------
-### Zoom sur votre environnement Codepace 
-Codepace est un outil proposer par GitHub soumit à quota (4$/mois). Si vous dépasser votre quota mensuel vous ne serez plus en mesure de pouvoir utiliser Codespace. C'est pourquoi à **la fin de votre atelier, pensez à suprimer votre Codespace après avoir mis à jour votre GitHub**.  
+### Q5 : Quelle est la différence entre les modules `copy` et `template` ?
+* **Le module `copy`** est purement statique : il transfère un fichier binaire ou texte tel quel, comme un simple copier-coller.
+* **Le module `template`** est dynamique : il utilise le moteur **Jinja2**. Il analyse le fichier source, remplace les variables (ex: `{{ author }}`) par leurs valeurs réelles au moment de l'exécution, puis génère le fichier final sur le serveur. C'est l'outil indispensable pour personnaliser les fichiers de configuration selon le contexte de chaque machine.
 
-### Vous pouvez voir l'état de vos Codespace ici : https://github.com/codespaces  
-  
----------------------------------------------------
-Evaluation
----------------------------------------------------
-Cet atelier ANSIBLE, **noté sur 20 points**, est évalué sur la base du barème suivant :  
-- Mise en oeuvre (2 points)
-- Exercice N°1 - Customisation de la page d'accueil (2 points)
-- Exercice N°2 - Paramétrer dynamiquement votre serveur avec Ansible (2 points)
-- Questions + Qualité du Readme (lisibilité, erreur, ...) (5 points)
-- Atelier - Rôles DEV et PROD (6 points)
-- Processus travail (quantité de commits, cohérence globale, interventions externes, ...) (3 points) 
+---
+
+## 🌐 Résultat Final
+Une fois le déploiement terminé, la page d'accueil affiche dynamiquement :
+* Le titre de l'atelier
+* Le nom de l'étudiant (**Jean-Gérard HOUNKANRIN**)
+* Le nom de l'encadrant (**Boris STOCKER**)
+* Un lien direct vers le campus de l'**EPSI Paris**.
+
